@@ -12,4 +12,13 @@ public class NumberUtils {
             throw new IllegalArgumentException(msg);
         }
     }
+
+    /**
+     * Checks if the given number is positive.
+     */
+    public static void checkPositive(double number, String msg) {
+        if (number <= 0) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
 }
