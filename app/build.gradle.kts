@@ -34,7 +34,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "awesomegic.bankingsystem.BankingSystem"
+    mainClass = "awesomegic.bank.BankSystem"
 }
 
 tasks.named<Test>("test") {
