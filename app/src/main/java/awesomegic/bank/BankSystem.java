@@ -3,12 +3,91 @@
  */
 package awesomegic.bank;
 
+import awesomegic.bank.cli.Cli;
+import awesomegic.bank.cli.exceptions.InputException;
+import awesomegic.bank.model.account.BankAccount;
+import awesomegic.bank.operation.Operation;
+import awesomegic.bank.operation.OperationFactory;
+import awesomegic.bank.operation.OperationResult;
+import awesomegic.bank.operation.exceptions.OperationException;
+
+/**
+ * Represents the AwesomeGIC Bank system.
+ */
 public class BankSystem {
-    public String getGreeting() {
-        return "Welcome to AwesomeGIC Bank";
+    private final Cli cli;
+    private BankAccount account;
+    private OperationFactory operationFactory;
+
+    BankSystem() {
+        this.cli = new Cli();
     }
 
     public static void main(String[] args) {
-        System.out.println(new BankSystem().getGreeting());
+        BankSystem system = new BankSystem();
+        system.start();
+    }
+
+    /**
+     * Logs the user into the bank system.
+     * Currently, will just create a new bank account.
+     */
+    private void login() {
+        this.account = new BankAccount();
+        this.operationFactory = new OperationFactory(this.account, this.cli);
+    }
+
+    /**
+     * Logs the user out and exit the bank system.
+     */
+    private void exit() {
+        this.cli.showExitMessage();  
+        this.cli.close();
+        this.account = null;
+        this.operationFactory = null;
+    }
+
+    /**
+     * Starts the AwesomeGIC Bank system.
+     */
+    public void start() {
+        this.login();
+
+        this.cli.showStartupMessage();
+
+        while (true) {
+            boolean shouldExit = this.processOperation();
+            if (shouldExit) {
+                break;
+            }
+            this.cli.showNewOperationPrompt();
+        }
+
+        this.exit();
+    }
+
+    /**
+     * Processes a user operation.
+     *
+     * @return A boolean value indicating whether the system should exit.
+     */
+    private boolean processOperation() {
+        try {
+            String option = this.cli.readOperationOption(this.operationFactory);
+            Operation operation = this.operationFactory.getOperation(option);
+
+            OperationResult result = operation.execute();
+            if (result.exit) {
+                return true;
+            }
+    
+            this.cli.showResult(result);
+        } catch (InputException e) {
+            this.cli.showInputError(e);
+        } catch (OperationException e) {
+            this.cli.showOperationError(e);
+        }
+
+        return false;
     }
 }
