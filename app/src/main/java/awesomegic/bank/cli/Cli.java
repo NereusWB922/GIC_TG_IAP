@@ -12,13 +12,13 @@ import awesomegic.bank.operation.exceptions.OperationException;
  * Handles command-line interactions for the application.
  */
 public class Cli {
-    private static final String MESSAGE_PROMPT_AMOUNT = "Please enter the amount to %s:";
+    private static final String MESSAGE_PROMPT_AMOUNT = "Please enter the amount to %s:\n";
     private static final String MESSAGE_INVALID_INPUT = "Invalid number format.";
     private static final String MESSAGE_NON_POSITIVE_TRANSACTION_AMOUNT = "Transaction amount must be positive.";
     private static final String MESSAGE_MORE_THAN_TWO_DECIMAL_PLACES = "Transaction amount must have at most two decimal places.";
     private static final String MESSAGE_WELCOME = "Welcome to AwesomeGIC Bank! What would you like to do?";
     private static final String MESSAGE_EXIT = "Thank you for banking with AwesomeGIC Bank.\nHave a nice day!";
-    private static final String MESSAGE_OPTIONS = "[D]eposit\n[W]ithdraw\n[P]rint statement\n[Q]uit";
+    private static final String MESSAGE_OPTIONS = "[D]eposit\n[W]ithdraw\n[P]rint statement\n[Q]uit\n";
     private static final String MESSAGE_INVALID_OPTION = "Please enter a valid option (D/W/P/Q).";
     private static final String MESSAGE_INPUT_ERROR = "Invalid input: %s";
     private static final String MESSAGE_OPERATION_ERROR = "Invalid operation: %s";
@@ -91,7 +91,20 @@ public class Cli {
      * @param msg A {@code String} message to be displayed.
      */
     public void show(String msg) {
-        System.out.println(msg);
+        System.out.println("\n" + msg);
+    }
+
+    /**
+     * Displays a provided error message within a visual "box".
+     *
+     * @param errorMessage The error message to be displayed.
+     */
+    public void showError(String errorMessage) {
+        int length = errorMessage.length();
+        String border = "+" + "-".repeat(length + 2) + "+";
+        String formattedMessage = "| " + errorMessage + " |";
+
+        this.show(border + "\n" + formattedMessage + "\n" + border);
     }
 
     /**
@@ -100,7 +113,8 @@ public class Cli {
      * @param exception An {@link InputException} instance.
      */
     public void showInputError(InputException exception) {
-        this.show(String.format(MESSAGE_INPUT_ERROR, exception.getMessage()));
+        String errorMessage = String.format(MESSAGE_INPUT_ERROR, exception.getMessage());
+        this.showError(errorMessage);
     }
 
     /**
@@ -109,7 +123,8 @@ public class Cli {
      * @param exception An {@link OperationException} instance.
      */
     public void showOperationError(OperationException exception) {
-        this.show(String.format(MESSAGE_OPERATION_ERROR, exception.getMessage()));
+        String errorMessage = String.format(MESSAGE_OPERATION_ERROR, exception.getMessage());
+        this.showError(errorMessage);
     }
 
     /**
