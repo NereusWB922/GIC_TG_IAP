@@ -1,5 +1,6 @@
 package awesomegic.bank.cli;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 import awesomegic.bank.cli.exceptions.InputException;
@@ -42,24 +43,29 @@ public class Cli {
      * Reads and validates the transaction amount from the CLI.
      *
      * @param transactionType A {@link String} describing the type of transaction (e.g., "deposit", "withdraw").
-     * @return A {@code double} representing the validated transaction amount.
+     * @return A {@code BigDecimal} representing the validated transaction amount.
      * @throws InputException If the input is not a valid number or is non-positive.
      */
-    public double readTransactionAmount(String transactionType) throws InputException {
-        System.out.println(String.format(MESSAGE_PROMPT_AMOUNT, transactionType));
+    public BigDecimal readTransactionAmount(String transactionType) throws InputException {
+        this.show(String.format(MESSAGE_PROMPT_AMOUNT, transactionType));
 
-        String input = this.scanner.nextLine();
-        double amount;
+        String input = this.readInput().trim();
+        BigDecimal amount;
         try {
-            amount = Double.parseDouble(input);
+            amount = new BigDecimal(input);
         } catch (NumberFormatException e) {
             throw new InputException(MESSAGE_INVALID_INPUT);
         }
 
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InputException(MESSAGE_NON_POSITIVE_TRANSACTION_AMOUNT);
         }
 
+        if (amount.scale() > 2) {
+            throw new InputException(MESSAGE_MORE_THAN_TWO_DECIMAL_PLACES);
+        }
+
+        return amount.setScale(2);
     }
 
     /**

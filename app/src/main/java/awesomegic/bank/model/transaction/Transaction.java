@@ -1,6 +1,9 @@
 package awesomegic.bank.model.transaction;
 
 import static java.util.Objects.requireNonNull;
+
+import java.math.BigDecimal;
+
 import static awesomegic.bank.utils.NumberUtils.checkNonNegative;
 
 import java.time.LocalDateTime;
@@ -10,8 +13,8 @@ import java.time.LocalDateTime;
  */
 public class Transaction {
     private static final String MESSAGE_NEGATIVE_BALANCE = "Account balance must be non-negative.";
-    public final double amount;
-    public final double balance;
+    public final BigDecimal amount;
+    public final BigDecimal balance;
     public final LocalDateTime dataTime;
 
     /**
@@ -21,7 +24,7 @@ public class Transaction {
      * @param balance  The balance after the transaction.
      * @param dateTime The date and time of the transaction.
      */
-    public Transaction(double amount, double balance, LocalDateTime dateTime) {
+    public Transaction(BigDecimal amount, BigDecimal balance, LocalDateTime dateTime) {
         checkNonNegative(balance, MESSAGE_NEGATIVE_BALANCE);
         requireNonNull(dateTime);
         this.amount = amount;

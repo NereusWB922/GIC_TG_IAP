@@ -1,5 +1,7 @@
 package awesomegic.bank.operation;
 
+import java.math.BigDecimal;
+
 import awesomegic.bank.cli.Cli;
 import awesomegic.bank.cli.exceptions.InputException;
 import awesomegic.bank.model.account.BankAccount;
@@ -34,7 +36,7 @@ public class DepositOperation implements Operation {
      */
     @Override
     public OperationResult execute() throws InputException {
-        double amount = this.cli.readTransactionAmount(TRANSACTION_TYPE);
+        BigDecimal amount = this.cli.readTransactionAmount(TRANSACTION_TYPE);
 
         this.account.deposit(amount);
 

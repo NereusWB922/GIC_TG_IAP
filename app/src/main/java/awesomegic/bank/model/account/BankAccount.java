@@ -2,6 +2,7 @@ package awesomegic.bank.model.account;
 
 import static awesomegic.bank.utils.NumberUtils.checkPositive;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import awesomegic.bank.model.transaction.Transaction;
@@ -15,14 +16,14 @@ public class BankAccount {
     private static final String MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT = "Deposit amount must be positive.";
     private static final String MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT = "Withdrawal amount must be positive.";
 
-    private double balance;
+    private BigDecimal balance;
     private TransactionList transactions;
     
     /**
      * Constructs a new BankAccount object with a zero balance.
      */
     public BankAccount() {
-        this.balance = 0;
+        this.balance = BigDecimal.ZERO.setScale(2);
         this.transactions = new TransactionList();
     }
 
@@ -32,9 +33,9 @@ public class BankAccount {
      * @param amount The amount to be deposited.
      * @throws IllegalArgumentException if the amount is not positive.
      */
-    public void deposit(double amount) {
+    public void deposit(BigDecimal amount) {
         checkPositive(amount, MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT);
-        this.balance += amount;
+        this.balance = this.balance.add(amount);
         transactions.add(new Transaction(amount, this.balance, LocalDateTime.now()));
     }
 
@@ -44,13 +45,13 @@ public class BankAccount {
      * @param amount The amount to be withdrawn.
      * @throws IllegalArgumentException if the amount is not positive or exceeds the balance.
      */
-    public void withdraw(double amount) {
+    public void withdraw(BigDecimal amount) {
         checkPositive(amount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
-        if (amount > this.balance) {
+        if (this.balance.compareTo(amount) < 0) {
             throw new IllegalArgumentException(MESSAGE_INVALID_WITHDRAWAL_AMOUNT);
         }
-        this.balance -= amount;
-        transactions.add(new Transaction(-1 * amount, this.balance, LocalDateTime.now()));
+        this.balance = this.balance.subtract(amount);
+        transactions.add(new Transaction(amount.negate(), this.balance, LocalDateTime.now()));
     }
 
     /**
@@ -60,9 +61,9 @@ public class BankAccount {
      * @return true if the balance is sufficient, false otherwise.
      * @throws IllegalArgumentException if the amount is not positive.
      */
-    public boolean isBalanceSufficient(double withdrawalAmount) {
+    public boolean isBalanceSufficient(BigDecimal withdrawalAmount) {
         checkPositive(withdrawalAmount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
-        return this.balance >= withdrawalAmount;
+        return this.balance.compareTo(withdrawalAmount) >= 0;
     }
 
     /**
