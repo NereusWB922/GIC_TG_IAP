@@ -6,7 +6,6 @@ import java.util.Set;
 
 import awesomegic.bank.cli.Cli;
 import awesomegic.bank.cli.exceptions.InputException;
-import awesomegic.bank.model.account.BankAccount;
 
 /**
  * Factory class for creating operations in the bank system.
@@ -14,18 +13,15 @@ import awesomegic.bank.model.account.BankAccount;
 public class OperationFactory {
     private static final String MESSAGE_INVALID_KEY = "The key '%s' is not recognized as a valid key for an operation.";
     private static final Operation QUIT_OPERATION = new QuitOperation();
-    private final BankAccount account;
     private final Cli cli;
     private final Set<String> operationKeys;
 
     /**
-     * Constructs a new OperationFactory with the specified bank account and CLI interface.
+     * Constructs a new OperationFactory with the CLI interface.
      *
-     * @param account The {@link BankAccount} to perform operations on.
      * @param cli The {@link Cli} instance used to interact with the user.
      */
-    public OperationFactory(BankAccount account, Cli cli) {
-        this.account = account;
+    public OperationFactory(Cli cli) {
         this.cli = cli;
         this.operationKeys = new HashSet<>();
         this.init();
@@ -45,19 +41,19 @@ public class OperationFactory {
      * Retrieves the operation associated with the given key.
      *
      * @param key The key representing the desired operation.
-     * @return The operation associated with the given key.
+     * @return The {@link Operation} associated with the given key.
      * @throws IllegalArgumentException If the key is not recognized.
      */
     public Operation getOperation(String key) throws InputException {
         switch (key) {
         case DepositOperation.OPERATION_KEY:
             BigDecimal depositAmount = this.cli.readTransactionAmount(DepositOperation.TRANSACTION_TYPE);
-            return new DepositOperation(account, depositAmount);
+            return new DepositOperation(depositAmount);
         case WithdrawOperation.OPERATION_KEY:
             BigDecimal withdrawalAmount = this.cli.readTransactionAmount(WithdrawOperation.TRANSACTION_TYPE);
-            return new WithdrawOperation(account, withdrawalAmount);
+            return new WithdrawOperation(withdrawalAmount);
         case PrintStatementOperation.OPERATION_KEY:
-            return new PrintStatementOperation(account);
+            return new PrintStatementOperation();
         case QuitOperation.OPERATION_KEY:
             return QUIT_OPERATION;
         default:

@@ -13,34 +13,32 @@ public class WithdrawOperation implements Operation {
     public static final String TRANSACTION_TYPE = "withdraw";
     private static final String MESSAGE_INSUFFICIENT_BALANCE = "Insufficient balance. Unable to complete withdrawal.";
     private static final String MESSAGE_WITHDRAWAL_SUCCESS = "Thank you. $%.2f has been withdrawn.";
-    private final BankAccount account;
     private final BigDecimal amount;
 
     /**
-     * Constructs a new {@code WithdrawOperation} with the specified {@link BankAccount} and withdrawal amount.
-     *
-     * @param account The {@link BankAccount} from which the withdrawal will be made.
+     * Constructs a new {@code WithdrawOperation} with the specified withdrawal amount.
+     * 
      * @param amount The amount to be withdrawed.
      */
-    WithdrawOperation(BankAccount account, BigDecimal amount) {
-        this.account = account;
+    WithdrawOperation(BigDecimal amount) {
         this.amount = amount;
     }
 
     /**
      * Executes the withdraw operation on the associated {@link BankAccount}.
      * 
+     * @param account The {@link BankAccount} from which the withdrawal will be made.
      * @return An {@link OperationResult} indicating the outcome of the withdrawal operation.
      * @throws OperationException If the account balance is insufficient for the withdrawal.
      */
     @Override
-    public OperationResult execute() throws OperationException {
-        if (!this.account.isBalanceSufficient(this.amount)) {
+    public OperationResult execute(BankAccount account) throws OperationException {
+        if (!account.isBalanceSufficient(this.amount)) {
             throw new OperationException(MESSAGE_INSUFFICIENT_BALANCE);
         }
 
-        this.account.withdraw(this.amount);
+        BankAccount updatedAccount = account.withdraw(this.amount);
 
-        return new OperationResult(String.format(MESSAGE_WITHDRAWAL_SUCCESS, this.amount));
+        return new OperationResult(updatedAccount, String.format(MESSAGE_WITHDRAWAL_SUCCESS, this.amount));
     }
 }

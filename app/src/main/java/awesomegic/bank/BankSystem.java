@@ -34,7 +34,7 @@ public class BankSystem {
      */
     private void login() {
         this.account = new BankAccount();
-        this.operationFactory = new OperationFactory(this.account, this.cli);
+        this.operationFactory = new OperationFactory(this.cli);
     }
 
     /**
@@ -76,7 +76,9 @@ public class BankSystem {
             String option = this.cli.readOperationOption(this.operationFactory);
             Operation operation = this.operationFactory.getOperation(option);
 
-            OperationResult result = operation.execute();
+            OperationResult result = operation.execute(account);
+            this.account = result.updatedAccount;
+
             if (result.exit) {
                 return true;
             }

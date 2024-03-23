@@ -1,5 +1,6 @@
 package awesomegic.bank.operation;
 
+import awesomegic.bank.model.account.BankAccount;
 import awesomegic.bank.operation.exceptions.OperationException;
 
 /**
@@ -13,5 +14,5 @@ public interface Operation {
      * @return An {@link OperationResult} representing the outcome of the operation.
      * @throws OperationException If the operation encounters an error during its execution.
      */
-    public OperationResult execute() throws OperationException;
+    public OperationResult execute(BankAccount account) throws OperationException;
 }
