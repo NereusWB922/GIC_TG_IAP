@@ -1,6 +1,13 @@
 package awesomegic.bank.model.account;
 
-import static awesomegic.bank.utils.NumberUtils.checkPositive;
+import static awesomegic.bank.cli.Message.MESSAGE_INVALID_WITHDRAWAL_AMOUNT;
+import static awesomegic.bank.cli.Message.MESSAGE_NEGATIVE_BALANCE;
+import static awesomegic.bank.cli.Message.MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT;
+import static awesomegic.bank.cli.Message.MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT;
+import static awesomegic.bank.utils.CollectionUtil.requireAllNonNull;
+import static awesomegic.bank.utils.NumberUtils.requireNonNegative;
+import static awesomegic.bank.utils.NumberUtils.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,10 +19,6 @@ import awesomegic.bank.model.transaction.TransactionList;
  * Represents an immutable bank account.
  */
 public final class BankAccount {
-    private static final String MESSAGE_INVALID_WITHDRAWAL_AMOUNT = "Withdrawal amount must not greater than balance.";
-    private static final String MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT = "Deposit amount must be positive.";
-    private static final String MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT = "Withdrawal amount must be positive.";
-
     private final BigDecimal balance;
     private final TransactionList transactions;
     
@@ -34,6 +37,9 @@ public final class BankAccount {
      * @param transactions The list of transactions associated with the bank account.
      */
     public BankAccount(BigDecimal balance, TransactionList transactions) {
+        requireAllNonNull(balance, transactions);
+        requireNonNegative(balance, MESSAGE_NEGATIVE_BALANCE);
+
         this.balance = balance;
         this.transactions = transactions;
     }
@@ -46,7 +52,8 @@ public final class BankAccount {
      * @throws IllegalArgumentException if the amount is not positive.
      */
     public BankAccount deposit(BigDecimal amount) {
-        checkPositive(amount, MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT);
+        requireNonNull(amount);
+        requirePositive(amount, MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT);
 
         BigDecimal newBalance = this.balance.add(amount);
 
@@ -64,7 +71,8 @@ public final class BankAccount {
      * @throws IllegalArgumentException if the amount is not positive or exceeds the balance.
      */
     public BankAccount withdraw(BigDecimal amount) {
-        checkPositive(amount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
+        requireNonNull(amount);
+        requirePositive(amount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
 
         if (!this.isBalanceSufficient(amount)) {
             throw new IllegalArgumentException(MESSAGE_INVALID_WITHDRAWAL_AMOUNT);
@@ -86,7 +94,9 @@ public final class BankAccount {
      * @throws IllegalArgumentException if the amount is not positive.
      */
     public boolean isBalanceSufficient(BigDecimal withdrawalAmount) {
-        checkPositive(withdrawalAmount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
+        requireNonNull(withdrawalAmount);
+        requirePositive(withdrawalAmount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
+
         return this.balance.compareTo(withdrawalAmount) >= 0;
     }
 

@@ -25,6 +25,8 @@ public final class TransactionList implements ReadOnlyTransactionList {
      * @param transactions The list of transactions to initialize the {@code TransactionList} with.
      */
     public TransactionList(List<Transaction> transactions) {
+        requireNonNull(transactions);
+
         this.transactions = new ArrayList<>(transactions);
     }
 

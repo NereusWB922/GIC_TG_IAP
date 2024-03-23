@@ -1,5 +1,9 @@
 package awesomegic.bank.operation;
 
+import static awesomegic.bank.cli.Message.MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT;
+import static awesomegic.bank.utils.NumberUtils.requirePositive;
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigDecimal;
 
 import awesomegic.bank.model.account.BankAccount;
@@ -19,6 +23,9 @@ public class DepositOperation implements Operation {
      * @param amount  The amount to be deposited.
      */
     DepositOperation(BigDecimal amount) {
+        requireNonNull(amount);
+        requirePositive(amount, MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT);
+
         this.amount = amount;
     }
 
@@ -30,6 +37,8 @@ public class DepositOperation implements Operation {
      */
     @Override
     public OperationResult execute(BankAccount account) {
+        requireNonNull(account);
+
         BankAccount updatedAccount = account.deposit(this.amount);
 
         return new OperationResult(updatedAccount, String.format(MESSAGE_DEPOSIT_SUCCESS, amount));

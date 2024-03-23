@@ -1,5 +1,7 @@
 package awesomegic.bank.operation;
 
+import static java.util.Objects.requireNonNull;
+
 import awesomegic.bank.model.account.AccountStatement;
 import awesomegic.bank.model.account.BankAccount;
 
@@ -21,7 +23,10 @@ public class PrintStatementOperation implements Operation {
      */
     @Override
     public OperationResult execute(BankAccount account) {
+        requireNonNull(account);
+
         AccountStatement statement = account.generateStatement();
+
         return new OperationResult(account, statement.toString());
     }
 }

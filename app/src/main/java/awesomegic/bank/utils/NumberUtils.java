@@ -9,8 +9,17 @@ public class NumberUtils {
     /**
      * Checks if the given number is non-negative.
      */
-    public static void checkNonNegative(BigDecimal number, String msg) {
+    public static void requireNonNegative(BigDecimal number, String msg) {
         if (number.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
+     * Checks if the given number is non-zero.
+     */
+    public static void requireNonZero(BigDecimal number, String msg) {
+        if (number.compareTo(BigDecimal.ZERO) == 0) {
             throw new IllegalArgumentException(msg);
         }
     }
@@ -18,7 +27,7 @@ public class NumberUtils {
     /**
      * Checks if the given number is positive.
      */
-    public static void checkPositive(BigDecimal number, String msg) {
+    public static void requirePositive(BigDecimal number, String msg) {
         if (number.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(msg);
         }

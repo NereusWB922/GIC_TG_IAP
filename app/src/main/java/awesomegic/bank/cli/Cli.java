@@ -1,5 +1,7 @@
 package awesomegic.bank.cli;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigDecimal;
 import java.util.Scanner;
 
@@ -76,8 +78,11 @@ public class Cli {
      * @throws InputException If the input is not a valid operation option.
      */
     public String readOperationOption(OperationFactory factory) throws InputException {
+        requireNonNull(factory);
+
         String input = this.readInput();
         String formattedInput = input.trim().toLowerCase();
+
         if (!factory.containsKey(formattedInput)) {
             throw new InputException(MESSAGE_INVALID_OPTION);
         }

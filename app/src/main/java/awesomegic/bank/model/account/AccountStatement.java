@@ -1,5 +1,7 @@
 package awesomegic.bank.model.account;
 
+import static java.util.Objects.requireNonNull;
+
 import java.time.format.DateTimeFormatter;
 
 import awesomegic.bank.model.transaction.ReadOnlyTransactionList;
@@ -23,6 +25,8 @@ public class AccountStatement {
      * @param transactions The list of transactions associated with the account statement.
      */
     AccountStatement(ReadOnlyTransactionList transactions) {
+        requireNonNull(transactions);
+
         this.transactions = transactions;
 
         for (Transaction transaction : this.transactions) {

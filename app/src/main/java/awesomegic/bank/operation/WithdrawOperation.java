@@ -1,5 +1,9 @@
 package awesomegic.bank.operation;
 
+import static awesomegic.bank.cli.Message.MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT;
+import static awesomegic.bank.utils.NumberUtils.requirePositive;
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigDecimal;
 
 import awesomegic.bank.model.account.BankAccount;
@@ -21,6 +25,9 @@ public class WithdrawOperation implements Operation {
      * @param amount The amount to be withdrawed.
      */
     WithdrawOperation(BigDecimal amount) {
+        requireNonNull(amount);
+        requirePositive(amount, MESSAGE_NON_POSITIVE_WITHDRAWAL_AMOUNT);
+
         this.amount = amount;
     }
 
@@ -33,6 +40,8 @@ public class WithdrawOperation implements Operation {
      */
     @Override
     public OperationResult execute(BankAccount account) throws OperationException {
+        requireNonNull(account);
+
         if (!account.isBalanceSufficient(this.amount)) {
             throw new OperationException(MESSAGE_INSUFFICIENT_BALANCE);
         }

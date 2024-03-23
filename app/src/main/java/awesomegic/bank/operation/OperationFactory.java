@@ -1,5 +1,7 @@
 package awesomegic.bank.operation;
 
+import static java.util.Objects.requireNonNull;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +24,8 @@ public class OperationFactory {
      * @param cli The {@link Cli} instance used to interact with the user.
      */
     public OperationFactory(Cli cli) {
+        requireNonNull(cli);
+
         this.cli = cli;
         this.operationKeys = new HashSet<>();
         this.init();

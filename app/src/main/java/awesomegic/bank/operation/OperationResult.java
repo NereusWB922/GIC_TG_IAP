@@ -1,5 +1,7 @@
 package awesomegic.bank.operation;
 
+import static awesomegic.bank.utils.CollectionUtil.requireAllNonNull;
+
 import awesomegic.bank.model.account.BankAccount;
 
 /**
@@ -18,6 +20,8 @@ public class OperationResult {
      * @param exit {@code true} if the application should exitn, {@code false} otherwise.
      */
     OperationResult(BankAccount updatedAccount, String feedback, boolean exit) {
+        requireAllNonNull(updatedAccount, feedback);
+
         this.updatedAccount = updatedAccount;
         this.feedback = feedback;
         this.exit = exit;

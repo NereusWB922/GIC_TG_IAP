@@ -1,5 +1,7 @@
 package awesomegic.bank.operation;
 
+import static java.util.Objects.requireNonNull;
+
 import awesomegic.bank.model.account.BankAccount;
 
 /**
@@ -19,6 +21,8 @@ public class QuitOperation implements Operation {
      */
     @Override
     public OperationResult execute(BankAccount account) {
+        requireNonNull(account);
+
         return new OperationResult(account, true);
     }
 }
