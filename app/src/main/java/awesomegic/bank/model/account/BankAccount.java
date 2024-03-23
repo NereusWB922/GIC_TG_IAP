@@ -36,7 +36,8 @@ public class BankAccount {
     public void deposit(BigDecimal amount) {
         checkPositive(amount, MESSAGE_NON_POSITIVE_DEPOSIT_AMOUNT);
         this.balance = this.balance.add(amount);
-        transactions.add(new Transaction(amount, this.balance, LocalDateTime.now()));
+        Transaction transaction = new Transaction(amount, this.balance, LocalDateTime.now());
+        this.transactions = transactions.add(transaction);
     }
 
     /**
@@ -50,8 +51,11 @@ public class BankAccount {
         if (this.balance.compareTo(amount) < 0) {
             throw new IllegalArgumentException(MESSAGE_INVALID_WITHDRAWAL_AMOUNT);
         }
+
         this.balance = this.balance.subtract(amount);
-        transactions.add(new Transaction(amount.negate(), this.balance, LocalDateTime.now()));
+        
+        Transaction transaction = new Transaction(amount.negate(), this.balance, LocalDateTime.now());
+        this.transactions = transactions.add(transaction);
     }
 
     /**
