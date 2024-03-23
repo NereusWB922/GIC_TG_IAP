@@ -1,9 +1,11 @@
 package awesomegic.bank.operation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import awesomegic.bank.cli.Cli;
+import awesomegic.bank.cli.exceptions.InputException;
 import awesomegic.bank.model.account.BankAccount;
 
 /**
@@ -14,7 +16,7 @@ public class OperationFactory {
     private static final Operation QUIT_OPERATION = new QuitOperation();
     private final BankAccount account;
     private final Cli cli;
-    private final Map<String, Operation> operations;
+    private final Set<String> operationKeys;
 
     /**
      * Constructs a new OperationFactory with the specified bank account and CLI interface.
@@ -25,18 +27,18 @@ public class OperationFactory {
     public OperationFactory(BankAccount account, Cli cli) {
         this.account = account;
         this.cli = cli;
-        this.operations = new HashMap<>();
+        this.operationKeys = new HashSet<>();
         this.init();
     }
 
     /**
-     * Initializes the operation map with predefined operation implementations.
+     * Initializes the operation keys set.
      */
     private void init() {
-        this.operations.put(DepositOperation.OPERATION_KEY, new DepositOperation(this.account, this.cli));
-        this.operations.put(WithdrawOperation.OPERATION_KEY, new WithdrawOperation(this.account, this.cli));
-        this.operations.put(PrintStatementOperation.OPERATION_KEY, new PrintStatementOperation(this.account));
-        this.operations.put(QuitOperation.OPERATION_KEY, QUIT_OPERATION);
+        this.operationKeys.add(DepositOperation.OPERATION_KEY);
+        this.operationKeys.add(WithdrawOperation.OPERATION_KEY);
+        this.operationKeys.add(PrintStatementOperation.OPERATION_KEY);
+        this.operationKeys.add(QuitOperation.OPERATION_KEY);
     }
 
     /**
@@ -46,11 +48,21 @@ public class OperationFactory {
      * @return The operation associated with the given key.
      * @throws IllegalArgumentException If the key is not recognized.
      */
-    public Operation getOperation(String key) {
-        if (!containsKey(key)) {
+    public Operation getOperation(String key) throws InputException {
+        switch (key) {
+        case DepositOperation.OPERATION_KEY:
+            BigDecimal depositAmount = this.cli.readTransactionAmount(DepositOperation.TRANSACTION_TYPE);
+            return new DepositOperation(account, depositAmount);
+        case WithdrawOperation.OPERATION_KEY:
+            BigDecimal withdrawalAmount = this.cli.readTransactionAmount(WithdrawOperation.TRANSACTION_TYPE);
+            return new WithdrawOperation(account, withdrawalAmount);
+        case PrintStatementOperation.OPERATION_KEY:
+            return new PrintStatementOperation(account);
+        case QuitOperation.OPERATION_KEY:
+            return QUIT_OPERATION;
+        default:
             throw new IllegalArgumentException(String.format(MESSAGE_INVALID_KEY, key));
         }
-        return this.operations.get(key);
     }
 
     /**
@@ -60,6 +72,6 @@ public class OperationFactory {
      * @return {@code true} if the factory contains the key, {@code false} otherwise.
      */
     public boolean containsKey(String key) {
-        return this.operations.containsKey(key);
+        return this.operationKeys.contains(key);
     }
 }

@@ -2,8 +2,6 @@ package awesomegic.bank.operation;
 
 import java.math.BigDecimal;
 
-import awesomegic.bank.cli.Cli;
-import awesomegic.bank.cli.exceptions.InputException;
 import awesomegic.bank.model.account.BankAccount;
 
 /**
@@ -11,34 +9,30 @@ import awesomegic.bank.model.account.BankAccount;
  */
 public class DepositOperation implements Operation {
     public static final String OPERATION_KEY = "d";
-    private static final String TRANSACTION_TYPE = "deposit";
+    public static final String TRANSACTION_TYPE = "deposit";
     private static final String MESSAGE_DEPOSIT_SUCCESS = "Deposit successful. $%.2f has been added to your account.";
     private final BankAccount account;
-    private final Cli cli;
+    private final BigDecimal amount;
 
     /**
-     * Constructs a new DepositOperation with a specified bank account and CLI interface.
+     * Creates a {@code DepositOperation} for a specified {@link BankAccount} and deposit amount.
      * 
-     * @param account The {@link BankAccount} to which the deposit will be made.
-     * @param cli The {@link Cli} instance used to interact with the user.
+     * @param account The {@link BankAccount} to which the deposit amount will be added.
+     * @param amount  The amount to be deposited.
      */
-    DepositOperation(BankAccount account, Cli cli) {
+    DepositOperation(BankAccount account, BigDecimal amount) {
         this.account = account;
-        this.cli = cli;
+        this.amount = amount;
     }
 
     /**
-     * Prompts the user for the deposit amount, validates the input,
-     * and updates the bank account balance.
+     * Executes the deposit operation on the associated {@link BankAccount}.
      * 
-     * @return An {@link OperationResult} indicating the outcome of the deposit operation.
-     * @throws InputException If the input read from the CLI is invalid.
+     * @return An {@link OperationResult} indicating the success of the deposit operation.
      */
     @Override
-    public OperationResult execute() throws InputException {
-        BigDecimal amount = this.cli.readTransactionAmount(TRANSACTION_TYPE);
-
-        this.account.deposit(amount);
+    public OperationResult execute() {
+        this.account.deposit(this.amount);
 
         return new OperationResult(String.format(MESSAGE_DEPOSIT_SUCCESS, amount));
     }
