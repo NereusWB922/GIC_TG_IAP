@@ -59,11 +59,9 @@ public class AccountStatement {
 
     private String getRow(String date, String amount, String balance) {
         String[] list = new String[]{
-            "",
             centeredCell(date, dateColumnWidth),
             centeredCell(amount, amountColumnWidth),
             centeredCell(balance, balanceColumnWidth),
-            ""
         };
         return String.join("|", list);
     }

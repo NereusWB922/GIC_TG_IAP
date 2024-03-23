@@ -14,7 +14,7 @@ import awesomegic.bank.model.account.BankAccount;
 public class DepositOperation implements Operation {
     public static final String OPERATION_KEY = "d";
     public static final String TRANSACTION_TYPE = "deposit";
-    private static final String MESSAGE_DEPOSIT_SUCCESS = "Deposit successful. $%.2f has been added to your account.";
+    private static final String MESSAGE_DEPOSIT_SUCCESS = "Thank you. $%.2f has been deposited to your account.";
     private final BigDecimal amount;
 
     /**
