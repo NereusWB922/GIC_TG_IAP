@@ -15,10 +15,10 @@ java -jar AwesomeGIC.jar
 ### Using Gradle Wrapper
 Run the following command:
 - For Unix/Linux/MACOS:
-```bash
-./gradlew run
-```
+    ```bash
+    ./gradlew run --console=plain
+    ```
 - For Windows:
-```bash
-./gradlew.bat run
-```
+    ```bash
+    ./gradlew.bat run --console=plain
+    ```
