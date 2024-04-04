@@ -50,9 +50,29 @@ public final class TransactionList implements ReadOnlyTransactionList {
     public boolean isEmpty() {
         return transactions.isEmpty();
     }
-
+    
     @Override
     public Iterator<Transaction> iterator() {
         return transactions.iterator();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof TransactionList)) {
+            return false;
+        }
+
+        TransactionList other = (TransactionList) obj;
+
+        return this.transactions.equals(other.transactions);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.transactions.hashCode();
     }
 }

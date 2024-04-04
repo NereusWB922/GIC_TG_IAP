@@ -11,6 +11,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import awesomegic.bank.model.transaction.Transaction;
 import awesomegic.bank.model.transaction.TransactionList;
@@ -107,5 +108,35 @@ public final class BankAccount {
      */
     public AccountStatement generateStatement() {
         return new AccountStatement(this.transactions);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof BankAccount)) {
+            return false;
+        }
+
+        BankAccount other = (BankAccount) obj;
+
+        return this.balance.equals(other.balance)
+            && this.transactions.equals(other.transactions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.balance.hashCode(), this.transactions.hashCode());
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(this.balance + "\n").append(this.transactions);
+
+        return sb.toString();
     }
 }

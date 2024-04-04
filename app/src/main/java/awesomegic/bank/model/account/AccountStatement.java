@@ -30,7 +30,7 @@ public class AccountStatement {
         this.transactions = transactions;
 
         for (Transaction transaction : this.transactions) {
-            this.dateColumnWidth = Math.max(this.dateColumnWidth, transaction.dataTime.format(formatter).length() + 2);
+            this.dateColumnWidth = Math.max(this.dateColumnWidth, transaction.dateTime.format(formatter).length() + 2);
             this.amountColumnWidth = Math.max(this.amountColumnWidth, String.valueOf(transaction.amount).length() + 2);
             this.balanceColumnWidth = Math.max(this.balanceColumnWidth, String.valueOf(transaction.balance).length() + 2);
         }
@@ -72,7 +72,7 @@ public class AccountStatement {
 
         for (Transaction t : transactions) {
             sb.append("\n");
-            sb.append(getRow(t.dataTime.format(formatter), String.valueOf(t.amount), String.valueOf(t.balance)));
+            sb.append(getRow(t.dateTime.format(formatter), String.valueOf(t.amount), String.valueOf(t.balance)));
         }
 
         return sb.toString();

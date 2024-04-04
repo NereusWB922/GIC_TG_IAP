@@ -9,14 +9,15 @@ import static awesomegic.bank.utils.NumberUtils.requireNonZero;
 import java.math.BigDecimal;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Represents a transaction in a bank system.
  */
-public class Transaction {
+public final class Transaction {
     public final BigDecimal amount;
     public final BigDecimal balance;
-    public final LocalDateTime dataTime;
+    public final LocalDateTime dateTime;
 
     /**
      * Constructs a new Transaction object.
@@ -32,6 +33,31 @@ public class Transaction {
 
         this.amount = amount;
         this.balance = balance;
-        this.dataTime = dateTime;
+        this.dateTime = dateTime;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Transaction)) {
+            return false;
+        }
+
+        Transaction other = (Transaction) obj;
+
+        return this.amount.equals(other.amount)
+            && this.balance.equals(other.balance)
+            && this.dateTime.equals(other.dateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            this.amount.hashCode(),
+            this.balance.hashCode(),
+            this.dateTime.hashCode());
     }
 }
